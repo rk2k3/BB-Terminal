@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { CommandBar } from "@/components/CommandBar";
 import { QuickBar } from "@/components/QuickBar";
 import { WorkspaceTabs } from "@/components/WorkspaceTabs";
@@ -51,6 +51,19 @@ export default function App() {
   const { tabs, activeTabId } = useWorkspace();
   const active = useMemo(() => tabs.find((t) => t.id === activeTabId) ?? tabs[0], [tabs, activeTabId]);
   const screen = active && SCREENS[active.code]?.(active.symbol);
+
+  // Keep URL in sync with the active tab (bookmarkable / shareable).
+  // Skip the very first render so we don't overwrite the incoming URL params
+  // before the store's onRehydrateStorage navigation has applied.
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (!didMount.current) { didMount.current = true; return; }
+    if (!active) return;
+    const p = new URLSearchParams();
+    p.set("cmd", active.code);
+    if (active.symbol) p.set("symbol", active.symbol);
+    window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
+  }, [active]);
 
   return (
     <div className="h-screen flex flex-col">

@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { FunctionCode } from "@/lib/functions";
+import { parseCommand } from "@/lib/functions";
+
+// Captured before React renders so URL sync effects can't overwrite it
+const _initialSearch = window.location.search;
 
 export interface Tab {
   id: string;
@@ -59,6 +63,22 @@ export const useWorkspace = create<WorkspaceState>()(
       setActiveTab: (id) => set({ activeTabId: id }),
       setActiveSymbol: (s) => set({ activeSymbol: s.toUpperCase() }),
     }),
-    { name: "bbterminal-workspace" }
+    {
+      name: "bbterminal-workspace",
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        const p = new URLSearchParams(_initialSearch);
+        const q = p.get("q");
+        const cmd = p.get("cmd");
+        const sym = p.get("symbol");
+        if (q) {
+          const parsed = parseCommand(q, state.activeSymbol);
+          if (parsed) state.openTab(parsed.code, parsed.symbol);
+        } else if (cmd) {
+          const parsed = parseCommand(sym ? `${sym} ${cmd}` : cmd, state.activeSymbol);
+          if (parsed) state.openTab(parsed.code, parsed.symbol);
+        }
+      },
+    }
   )
 );

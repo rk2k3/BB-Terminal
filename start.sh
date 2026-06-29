@@ -11,7 +11,7 @@ ok()   { printf "${GREEN}✓ %s${RST}\n" "$*"; }
 fail() { printf "${RED}✗ %s${RST}\n" "$*" >&2; exit 1; }
 
 API_PORT=6900
-UI_PORT=5173
+UI_PORT=5174
 
 [ -x .venv/bin/openbb-api ] || fail "Run ./setup.sh first (OpenBB is not installed)."
 [ -d app/node_modules ] || fail "Run ./setup.sh first (UI deps not installed)."
@@ -23,7 +23,7 @@ if port_in_use "$API_PORT"; then
   ok "OpenBB API already running on :$API_PORT"
 else
   step "Starting OpenBB API on :$API_PORT"
-  nohup .venv/bin/openbb-api --host 127.0.0.1 --port "$API_PORT" \
+  nohup .venv/bin/openbb-api --host 0.0.0.0 --port "$API_PORT" \
     > /tmp/bbterminal-api.log 2>&1 &
   API_PID=$!
   printf "  ${DIM}waiting for API to come up"
@@ -44,7 +44,7 @@ if port_in_use "$UI_PORT"; then
   ok "UI dev server already running on :$UI_PORT"
 else
   step "Starting UI on :$UI_PORT"
-  ( cd app && nohup npm run dev > /tmp/bbterminal-ui.log 2>&1 & )
+  ( cd app && export PATH="/usr/bin:$PATH" && nohup npm run dev > /tmp/bbterminal-ui.log 2>&1 & )
   printf "  ${DIM}waiting for UI"
   for i in $(seq 1 30); do
     if curl -s -o /dev/null "http://127.0.0.1:$UI_PORT/"; then
