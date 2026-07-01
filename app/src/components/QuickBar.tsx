@@ -5,19 +5,14 @@ import { cn } from "@/lib/cn";
 interface Btn { code: FunctionCode; label: string; }
 
 const BUTTONS: Btn[] = [
-  { code: "CC",     label: "Home" },
-  { code: "INTEL",  label: "Intel" },
-  { code: "GP",     label: "Chart" },
-  { code: "KEY",    label: "Ratios" },
-  { code: "FA",     label: "Financials" },
-  { code: "OMON",   label: "Options" },
-  { code: "NI",     label: "News" },
-  { code: "MOV",    label: "Movers" },
-  { code: "WEI",    label: "Global" },
-  { code: "CRYPTO", label: "Crypto" },
-  { code: "FXC",    label: "FX" },
-  { code: "CURV",   label: "Yields" },
-  { code: "HELP",   label: "Help" },
+  { code: "CC",    label: "Home" },
+  { code: "INTEL", label: "Intel" },
+  { code: "GP",    label: "Chart" },
+  { code: "KEY",   label: "Ratios" },
+  { code: "FA",    label: "Financials" },
+  { code: "NI",    label: "News" },
+  { code: "WEI",   label: "Global" },
+  { code: "HELP",  label: "Help" },
 ];
 
 export function QuickBar() {

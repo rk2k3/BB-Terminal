@@ -81,7 +81,7 @@ export function CommandBar() {
               setInput([...rest, suggestions[suggestIdx].code].join(" ") + " ");
             }
           }}
-          placeholder="TRY:  AAPL   |   TSLA INTEL   |   CC   |   WEI   |   MOV   |   HELP"
+          placeholder="TRY:  AAPL   |   TSLA INTEL   |   CC   |   WEI   |   HELP"
           spellCheck={false}
           autoCapitalize="characters"
           className="flex-1 bg-transparent uppercase text-term-amberBright placeholder:text-term-muted focus:outline-none text-[13px] tracking-wider"
